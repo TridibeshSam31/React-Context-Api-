@@ -1,0 +1,106 @@
+React Context API is a state-sharing mechanism.
+It lets you share data globally across components without passing props down manually at every level.
+
+But don’t think of it as a replacement for every state. It’s NOT a mini-Redux.
+Use it only when multiple deeply nested components need the same data.
+
+The Problem Context Solves
+
+Without Context:
+App -> Component A -> Component B -> Component C -> Component D
+
+If only Component D needs “theme = dark”, you’d have to pass it through every useless layer in between.
+
+This is prop drilling.
+
+Context kills this problem by letting ANY component access the value directly.
+
+
+✔️ How Context Actually Works (Conceptual Flow)
+
+There are 3 steps, and if any of these is unclear, you don’t understand Context:
+
+1️⃣ Create the Context (the shared container)
+const ThemeContext = React.createContext();
+This creates a "box" where your shared value lives.
+
+2️⃣ Provide the Value (make it available globally)
+You wrap a component tree with a Provider:
+<ThemeContext.Provider value={{ theme: "dark" }}>
+    <App />
+</ThemeContext.Provider>
+Everything inside <Provider> can read the value.
+
+3️⃣ Consume the Value (use it in any component)
+const { theme } = useContext(ThemeContext);
+No props passing. No drilling.
+
+
+
+Where Context Is Perfect
+
+Use Context ONLY for data that is:
+
+✔️ 1. Needed in many components
+✔️ 2. Not frequently changing
+✔️ 3. Not huge in size
+
+Examples:
+
+Auth user data (name, email, token)
+Theme (light/dark)
+Language preference
+Global modals state
+Cart count (not full cart items)
+
+
+
+Where Context Is a BAD Idea (Important)
+
+Don’t use Context for:
+
+Rapidly changing data (typing, animations, frequent API polling)
+Large lists (products, messages, posts)
+Local state that only 1–2 components need
+
+Why?
+
+Because every state update inside Context re-renders ALL consumers.
+That kills performance.
+
+
+
+Creating Context
+import { createContext } from "react";
+
+export const AuthContext = createContext();
+
+
+Creating a Provider Component
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(null);
+
+  const login = (data) => setUser(data);
+  const logout = () => setUser(null);
+
+  return (
+    <AuthContext.Provider value={{ user, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+Using It
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+
+function Dashboard() {
+  const { user, logout } = useContext(AuthContext);
+
+  return (
+    <>
+      <h1>Welcome {user?.name}</h1>
+      <button onClick={logout}>Logout</button>
+    </>
+  );
+}
