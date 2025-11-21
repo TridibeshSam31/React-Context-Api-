@@ -1,6 +1,6 @@
-import UserContextProvider from './context/UserContextProvider';
-import Login from './components/Login';
-import Profile from './components/Profile';
+import UserContextProvider from './assets/context/UserContextProvider.jsx';
+import Login from './assets/components/Login.jsx';
+import Profile from './assets/components/Profile.jsx';
 
 
 
