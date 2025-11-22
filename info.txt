@@ -35,6 +35,24 @@ Everything inside <Provider> can read the value.
 const { theme } = useContext(ThemeContext);
 No props passing. No drilling.
 
+which values should be passed in the providers ??
+Because Context has ONE job:
+
+👉 Make some values globally available to ANY component without props.
+
+So what values do we want global for a theme system?
+
+✔ The current theme → "light" / "dark"
+✔ The function that changes the theme → toggleTheme()
+
+If you don’t pass these two things, components can’t:
+
+read the theme
+
+change the theme
+
+That’s why the value prop is REQUIRED.
+
 
 
 Where Context Is Perfect
